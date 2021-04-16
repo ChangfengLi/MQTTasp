@@ -72,9 +72,9 @@ protected:
 	void user_start();
 	void user_stop();
 
-	void outgoing_send(const CHARSTRING& send_par);
-	void outgoing_send(const MQTTasp__Types::MQTT__Data& send_par);
-	virtual void incoming_message(const CHARSTRING& incoming_par) = 0;
+	void outgoing_send(const CHARSTRING& send_par, FLOAT* timestamp_redirect);
+	void outgoing_send(const MQTTasp__Types::MQTT__Data& send_par, FLOAT* timestamp_redirect);
+	virtual void incoming_message(const CHARSTRING& incoming_par, const FLOAT& timestamp = FLOAT()) = 0;
 	void setUpSocket();
 	void closeDownSocket();
 

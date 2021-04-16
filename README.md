@@ -16,6 +16,8 @@ Eclipse TITAN
 
 3.通过.cfg文件动态配置默认MQTT参数。
 
+4.启用TTCN-3实时功能，在发送接收函数出重定向时间戳参数。
+
 ### 端口文件
 
 MQTTasp_PortType.ttcn    MQTTasp_Types.ttcn    MQTTasp_PT.hh    MQTTasp_PT.cc
@@ -111,5 +113,21 @@ BrokerAddress表示默认broker地址，PubTopic和SubTopic分别
 *.MyPCO.SubTopic := "TTCN-1"
 ```
 
+### 四.时间戳功能
+
+可获取发送接收时刻的时间戳，时间戳类型为float，单位为秒，精确到微妙。
+用法及示例如下：
+
+```
+var float time_start := now; //获取当前时间
+
+//捕获发送时刻时间戳
+var float time_send；
+MyPCO.send("Good Bye!") -> timestamp time_send;
+
+//捕获接收时刻时间戳
+var float time_receive；
+[] MyPCO.receive("bye")-> timestamp time_receive；
+```
 
 

@@ -1,33 +1,14 @@
 /******************************************************************************
-* Copyright (c) 2000-2021 Ericsson Telecom AB
-* All rights reserved. This program and the accompanying materials
-* are made available under the terms of the Eclipse Public License v2.0
-* which accompanies this distribution, and is available at
-* https://www.eclipse.org/org/documents/epl-2.0/EPL-2.0.html
+* MQTTas测试demo
+*HelloW0,HelloW1,HelloW2测试用例用于测试发布订阅功能
+*HelloW3测试用例用于测试实时功能
 *
 * Contributors:
-*   Balasko, Jeno
-*   Lovassy, Arpad
-*   Szabo, Janos Zoltan – initial implementation
+*   ChangfengLi
 *
 ******************************************************************************/
-// TTCN-3 version of "Hello, world!"
 module MyExample
 {
-//   type charstring Topic;
-//   type charstring Data;
-
-//   type record MQTT_Data {    // kept for compatibility
-// 	  Data       data,
-// 	  Topic       pub optional,
-//     Topic       sub optional
-//   }
-
-// type port PCOType message
-// {
-//   inout charstring;
-//   out  MQTT_Data;
-// }
 import from MQTTasp_Types all;
 import from MQTTasp_PortType all;
 
@@ -97,10 +78,31 @@ testcase HelloW2() runs on MTCType system MTCType
   unmap(mtc:MyPCO, system:MyPCO);
 }
 
+testcase HelloW3() runs on MTCType system MTCType
+{
+  timer T := 20.0;
+  map(mtc:MyPCO, system:MyPCO);
+
+  var float time_start := now, time_send, time_receive;
+
+  MyPCO.send("Good Bye!") -> timestamp time_send;
+  log(time_start);  
+  log(time_send);
+  T.start;
+  alt {
+    [] MyPCO.receive("bye")-> timestamp time_receive { T.stop; setverdict(pass); }
+    [] T.timeout { setverdict(inconc); }
+    [] MyPCO.receive -> timestamp time_receive { T.stop; setverdict(fail); }
+  }
+  log(time_receive);
+  unmap(mtc:MyPCO, system:MyPCO);
+}
+
 control
 {
-  execute(HelloW0());
-  execute(HelloW1());
-  execute(HelloW2());
+  // execute(HelloW0());
+  // execute(HelloW1());
+  // execute(HelloW2());
+  execute(HelloW3());
 }
 }

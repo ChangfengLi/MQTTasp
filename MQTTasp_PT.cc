@@ -89,7 +89,7 @@ void MQTTasp__PT_PROVIDER::Event_Handler(const fd_set *read_fds,//接收触发
 	if ((msgLength = recvfrom(target_fd, (char*)msg, sizeof(msg), 0, (struct sockaddr*)&remoteAddr, &addr_length)) < 0)
 		TTCN_error("Error when reading the received UDP PDU.");
 	msg[msgLength] = '\0';  
-	incoming_message(CHARSTRING(msgLength, (char*)msg));
+	incoming_message(CHARSTRING(msgLength, (char*)msg), TTCN_Runtime::now());
 }
 
 void MQTTasp__PT_PROVIDER::user_map(const char *system_port)//端口映射
@@ -148,8 +148,12 @@ void MQTTasp__PT_PROVIDER::user_stop()
 }
 
 //参数为string的数据发布
-void MQTTasp__PT_PROVIDER::outgoing_send(const CHARSTRING& send_par)
+void MQTTasp__PT_PROVIDER::outgoing_send(const CHARSTRING& send_par, FLOAT* timestamp_redirect)
 {
+	if (timestamp_redirect != NULL) {
+		*timestamp_redirect = TTCN_Runtime::now();
+	}
+
 	char PAYLOAD[256];
 	strcpy(PAYLOAD,(const char*)send_par);
 	pubmsg.payload = PAYLOAD;
@@ -164,8 +168,12 @@ void MQTTasp__PT_PROVIDER::outgoing_send(const CHARSTRING& send_par)
 }
 
 //参数为MQTT_Data的数据发送
-void MQTTasp__PT_PROVIDER::outgoing_send(const MQTTasp__Types::MQTT__Data& send_par)
+void MQTTasp__PT_PROVIDER::outgoing_send(const MQTTasp__Types::MQTT__Data& send_par, FLOAT* timestamp_redirect)
 {
+	if (timestamp_redirect != NULL) {
+		*timestamp_redirect = TTCN_Runtime::now();
+	}
+
 	char PAYLOAD[256];
 	strcpy(PAYLOAD,(const char*)send_par.data());
 	pubmsg.payload = PAYLOAD;

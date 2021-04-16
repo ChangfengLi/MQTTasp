@@ -57,6 +57,9 @@ ARFLAGS =
 # Flags for the TTCN-3 and ASN.1 compiler:
 COMPILER_FLAGS = -L 
 
+#realtime flag
+COMPILER_FLAGS += -I
+
 # Execution mode: (either ttcn3 or ttcn3-parallel)
 TTCN3_LIB = ttcn3-parallel
 
